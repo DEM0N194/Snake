@@ -64,8 +64,9 @@ private:
 	const unsigned int START_X;
 	const unsigned int START_Y;
 	const unsigned int START_LENGTH;
+	float segmentShade;
+	bool segmentShadeDarkening;
 	Color cHead;
-	Color cSegment;
 	Color cFood;
 	bool DO_RIGHT;
 	bool DO_LEFT;

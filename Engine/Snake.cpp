@@ -26,8 +26,7 @@ Snake::Snake()
 	, START_LENGTH(3)
 	, food(Graphics::ScreenWidth, Graphics::ScreenHeight, CELL_SIZE)
 {
-	cHead = Color(31, 63, 31);
-	cSegment = Color(63,127,63);
+	cHead = Color(127, 127, 31);
 	cFood = Color(127,63,63);
 	Restart();
 }
@@ -57,6 +56,7 @@ void Snake::Update(Keyboard & kbd, float dt)
 
 	UpdateControls(kbd);
 
+	starvingTime -= dt;
 	time += dt;
 	if (time < timeOut)
 	{
@@ -64,7 +64,6 @@ void Snake::Update(Keyboard & kbd, float dt)
 	}
 	time -= timeOut;
 
-	starvingTime -= dt;
 	if (starvingTime <= 0)
 	{
 		health--;
@@ -239,6 +238,10 @@ void Snake::AddSegment(unsigned int x, unsigned int y)
 
 void Snake::MoveSnake()
 {
+	const float R = 31;
+	const float G = 63;
+	const float B = 31;
+
 	static const int moveX[] = {1,-1, 0, 0};
 	static const int moveY[] = {0, 0, 1,-1};
 
@@ -261,7 +264,7 @@ void Snake::MoveSnake()
 	{
 		y = CELL_SIZE;
 	}
-	
+
 	SnakeSegment nextSegment(x, y);
 	segments.push_front(nextSegment);
 
@@ -296,9 +299,29 @@ bool Snake::CheckForFoodCollision()
 void Snake::RenderSnake(Graphics & gfx)
 {
 	DrawSquare(gfx, segments[0].GetX(), segments[0].GetY(), cHead);
+	segmentShade = 2.0f;
 	for (unsigned int i = 1; i < segments.size(); i++)
 	{
-		DrawSquare(gfx, segments[i].GetX(), segments[i].GetY(), cSegment);
+
+		if (segmentShade >= 1.0f)
+		{
+			segmentShadeDarkening = true;
+		}
+		else if (segmentShade <= 0.7f)
+		{
+			segmentShadeDarkening = false;
+		}
+
+		if (segmentShadeDarkening)
+		{
+			segmentShade -= 0.2f;
+		}
+		else
+		{
+			segmentShade += 0.2f;
+		}
+		
+		DrawSquare(gfx, segments[i].GetX(), segments[i].GetY(), Color(static_cast<int>(31.0f * segmentShade), static_cast<int>(63.0f * segmentShade), static_cast<int>(31.0f * segmentShade)));
 	}
 }
 
