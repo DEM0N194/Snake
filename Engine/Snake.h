@@ -45,7 +45,7 @@ private:
 public:
 	Snake();
 	void Restart();
-	void Update(Keyboard& kbd);
+	void Update(Keyboard& kbd, float dt);
 	void Render(Graphics& gfx);
 	bool IsDead() const;
 	bool IsGameWon() const;
@@ -71,13 +71,13 @@ private:
 	eDir directionOld;
 	bool dead;
 	bool won;
-	int starvingTime;
-	const int timeToStarve;
+	float starvingTime;
+	const float timeToStarve;
 	unsigned int health;
-	unsigned int time;
-	unsigned int timeOut;
-	const unsigned int BASE_SPEED;
-	const unsigned int BOOST_SPEED;
+	float time;
+	float timeOut;
+	const float BASE_SPEED;
+	const float BOOST_SPEED;
 	const unsigned int START_X;
 	const unsigned int START_Y;
 	const unsigned int START_LENGTH;

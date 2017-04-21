@@ -38,6 +38,7 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	const float dt = ft.Mark();
 	if (wnd.kbd.KeyIsPressed(VK_ESCAPE))
 	{
 		wnd.Kill();
@@ -51,7 +52,7 @@ void Game::UpdateModel()
 	}
 	else
 	{
-		snake.Update(wnd.kbd);
+		snake.Update(wnd.kbd, dt);
 	}
 }
 

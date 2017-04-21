@@ -41,10 +41,10 @@ unsigned int Snake::SnakeFood::GetY() const
 }
 
 Snake::Snake()
-	: BASE_SPEED(15)
-	, BOOST_SPEED(5)
+	: BASE_SPEED(0.25f)
+	, BOOST_SPEED(0.08f)
 	, timeOut(BASE_SPEED)
-	, timeToStarve(420)
+	, timeToStarve(7.0f)
 	, START_X(Graphics::ScreenWidth / 2)
 	, START_Y(Graphics::ScreenHeight / 2)
 	, START_LENGTH(3)
@@ -71,7 +71,7 @@ void Snake::Restart()
 	}
 }
 
-void Snake::Update(Keyboard & kbd)
+void Snake::Update(Keyboard & kbd, float dt)
 {
 	if (dead || won)
 	{
@@ -80,18 +80,19 @@ void Snake::Update(Keyboard & kbd)
 
 	UpdateControls(kbd);
 
-	starvingTime--;
-	time++;
+	starvingTime -= dt;
+	time += dt;
 	if (time < timeOut)
 	{
 		return;
 	}
-	time = 0;
+	time -= timeOut;
 
 	if (starvingTime <= 0)
 	{
 		health--;
-		starvingTime = timeToStarve;
+		starvingTime += timeToStarve;
+		food.Respawn();
 	}
 
 	MoveSnake();

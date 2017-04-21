@@ -24,6 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Snake.h"
+#include "FrameTimer.h"
 
 class Game
 {
@@ -45,5 +46,6 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Snake snake;
+	FrameTimer ft;
 	/********************************/
 };
