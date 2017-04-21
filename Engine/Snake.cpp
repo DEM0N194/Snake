@@ -1,9 +1,10 @@
 #include "Snake.h"
 
-Snake::SnakeSegment::SnakeSegment(unsigned int x, unsigned int y)
+Snake::SnakeSegment::SnakeSegment(unsigned int x, unsigned int y, unsigned int padding)
 {
 	this->x = x;
 	this->y = y;
+	p = padding;
 }
 
 unsigned int Snake::SnakeSegment::GetX() const
@@ -14,6 +15,11 @@ unsigned int Snake::SnakeSegment::GetX() const
 unsigned int Snake::SnakeSegment::GetY() const
 {
 	return y;
+}
+
+unsigned int Snake::SnakeSegment::GetP() const
+{
+	return p;
 }
 
 Snake::Snake()
@@ -90,8 +96,10 @@ void Snake::Update(Keyboard & kbd, float dt)
 		return;
 	}
 
+	foodEaten = false;
 	if (CheckForFoodCollision())
 	{
+		foodEaten = true;
 		food.Respawn();
 		starvingTime = timeToStarve;
 		for (unsigned int i = 0; i < segments.size(); i++)
@@ -232,7 +240,7 @@ void Snake::UpdateControls(Keyboard& kbd)
 
 void Snake::AddSegment(unsigned int x, unsigned int y)
 {
-	SnakeSegment segment(x, y);
+	SnakeSegment segment(x, y, 2);
 	segments.push_back(segment);
 }
 
@@ -265,8 +273,16 @@ void Snake::MoveSnake()
 		y = CELL_SIZE;
 	}
 
-	SnakeSegment nextSegment(x, y);
-	segments.push_front(nextSegment);
+	if (foodEaten)
+	{
+		SnakeSegment nextSegment(x, y, 1);
+		segments.push_front(nextSegment);
+	}
+	else
+	{
+		SnakeSegment nextSegment(x, y, 2);
+		segments.push_front(nextSegment);
+	}
 
 	directionOld = direction;
 }
@@ -298,7 +314,7 @@ bool Snake::CheckForFoodCollision()
 
 void Snake::RenderSnake(Graphics & gfx)
 {
-	DrawSquare(gfx, segments[0].GetX(), segments[0].GetY(), cHead);
+	DrawSquareWPadding(gfx, segments[0].GetX(), segments[0].GetY(), cHead, 1);
 	segmentShade = 2.0f;
 	for (unsigned int i = 1; i < segments.size(); i++)
 	{
@@ -321,7 +337,10 @@ void Snake::RenderSnake(Graphics & gfx)
 			segmentShade += 0.2f;
 		}
 		
-		DrawSquare(gfx, segments[i].GetX(), segments[i].GetY(), Color(static_cast<int>(31.0f * segmentShade), static_cast<int>(63.0f * segmentShade), static_cast<int>(31.0f * segmentShade)));
+		DrawSquareWPadding( gfx, segments[i].GetX(), segments[i].GetY(),
+						   Color(static_cast<int>(31.0f * segmentShade),
+								 static_cast<int>(63.0f * segmentShade),
+								 static_cast<int>(31.0f * segmentShade)), segments[i].GetP());
 	}
 }
 
@@ -383,7 +402,7 @@ void Snake::RenderStarvingTime(Graphics & gfx)
 
 void Snake::RenderFood(Graphics & gfx)
 {
-	DrawSquare(gfx, food.GetX(), food.GetY(), cFood);
+	DrawSquareWPadding(gfx, food.GetX(), food.GetY(), cFood, 2);
 }
 
 void Snake::DrawSquare(Graphics & gfx, unsigned int x, unsigned int y, Color c)
@@ -391,6 +410,17 @@ void Snake::DrawSquare(Graphics & gfx, unsigned int x, unsigned int y, Color c)
 	for (unsigned int i = 0; i < CELL_SIZE; i++)
 	{
 		for (unsigned int j = 0; j < CELL_SIZE; j++)
+		{
+			gfx.PutPixel(x + j, y + i, c);
+		}
+	}
+}
+
+void Snake::DrawSquareWPadding(Graphics & gfx, unsigned int x, unsigned int y, Color c, int padding)
+{
+	for (unsigned int i = padding; i < CELL_SIZE - padding; i++)
+	{
+		for (unsigned int j = padding; j < CELL_SIZE - padding; j++)
 		{
 			gfx.PutPixel(x + j, y + i, c);
 		}

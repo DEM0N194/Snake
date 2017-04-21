@@ -10,12 +10,14 @@ private:
 	class SnakeSegment
 	{
 	public:
-		SnakeSegment(unsigned int x, unsigned int y);
+		SnakeSegment(unsigned int x, unsigned int y, unsigned int padding);
 		unsigned int GetX() const;
 		unsigned int GetY() const;
+		unsigned int GetP() const;
 	private:
 		unsigned int x;
 		unsigned int y;
+		unsigned int p;
 	};
 private:
 	enum class eDir
@@ -46,6 +48,7 @@ private:
 	void RenderHealth(Graphics& gfx);
 	void RenderStarvingTime(Graphics& gfx);
 	void DrawSquare(Graphics& gfx, unsigned int x, unsigned int y, Color c);
+	void DrawSquareWPadding(Graphics & gfx, unsigned int x, unsigned int y, Color c, int padding);
 private:
 	static constexpr unsigned int CELL_SIZE = 20;
 	std::deque<SnakeSegment> segments;
@@ -54,6 +57,7 @@ private:
 	eDir directionOld;
 	bool dead;
 	bool won;
+	bool foodEaten;
 	float starvingTime;
 	const float timeToStarve;
 	unsigned int health;
