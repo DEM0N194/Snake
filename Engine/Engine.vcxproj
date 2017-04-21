@@ -148,6 +148,7 @@
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Snake.h" />
+    <ClInclude Include="SnakeFood.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXErr.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="PutPIxelDump.cpp" />
     <ClCompile Include="Snake.cpp" />
+    <ClCompile Include="SnakeFood.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FramebufferPS.hlsl">
