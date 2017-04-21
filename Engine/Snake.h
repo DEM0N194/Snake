@@ -1,9 +1,9 @@
 #pragma once
 #include <deque>
-#include <random>
 #include "Graphics.h"
 #include "Keyboard.h"
 #include "Colors.h"
+#include "SnakeFood.h"
 class Snake
 {
 private:
@@ -18,25 +18,8 @@ private:
 		unsigned int y;
 	};
 private:
-	class SnakeFood
-	{
-	public:
-		SnakeFood();
-		void Respawn();
-		unsigned int GetX() const;
-		unsigned int GetY() const;
-	private:
-		unsigned int x;
-		unsigned int y;
-	private:
-		std::random_device rd;
-		std::mt19937 rng;
-		std::uniform_int_distribution<int> xDist;
-		std::uniform_int_distribution<int> yDist;
-	};
-private:
 	enum class eDir
-	{				// [xv;yv] 
+	{					// [xv;yv] 
 		GO_RIGHT,		// [ 1; 0]
 		GO_LEFT,		// [-1; 0]
 		GO_DOWN,		// [ 0; 1]

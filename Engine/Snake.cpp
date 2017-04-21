@@ -16,30 +16,6 @@ unsigned int Snake::SnakeSegment::GetY() const
 	return y;
 }
 
-Snake::SnakeFood::SnakeFood()
-	: rng(rd())
-	, xDist(1, Graphics::ScreenWidth / CELL_SIZE - 2)
-	, yDist(1, Graphics::ScreenHeight / CELL_SIZE - 2)
-{
-	Respawn();
-}
-
-void Snake::SnakeFood::Respawn()
-{
-	x = CELL_SIZE * xDist(rng);
-	y = CELL_SIZE * yDist(rng);
-}
-
-unsigned int Snake::SnakeFood::GetX() const
-{
-	return x;
-}
-
-unsigned int Snake::SnakeFood::GetY() const
-{
-	return y;
-}
-
 Snake::Snake()
 	: BASE_SPEED(0.25f)
 	, BOOST_SPEED(0.08f)
@@ -48,6 +24,7 @@ Snake::Snake()
 	, START_X(Graphics::ScreenWidth / 2)
 	, START_Y(Graphics::ScreenHeight / 2)
 	, START_LENGTH(3)
+	, food(Graphics::ScreenWidth, Graphics::ScreenHeight, CELL_SIZE)
 {
 	cHead = Color(31, 63, 31);
 	cSegment = Color(63,127,63);
@@ -80,7 +57,6 @@ void Snake::Update(Keyboard & kbd, float dt)
 
 	UpdateControls(kbd);
 
-	starvingTime -= dt;
 	time += dt;
 	if (time < timeOut)
 	{
@@ -88,6 +64,7 @@ void Snake::Update(Keyboard & kbd, float dt)
 	}
 	time -= timeOut;
 
+	starvingTime -= dt;
 	if (starvingTime <= 0)
 	{
 		health--;
@@ -102,6 +79,7 @@ void Snake::Update(Keyboard & kbd, float dt)
 		health--;
 	}
 
+	// You win if your snake takes up half a screen
 	if (segments.size() == ((Graphics::ScreenWidth - 2 * CELL_SIZE) / CELL_SIZE) * ((Graphics::ScreenHeight - 2 * CELL_SIZE) / CELL_SIZE) / 2)
 	{
 		won = true;
