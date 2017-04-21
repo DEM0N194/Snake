@@ -57,7 +57,6 @@ void Snake::Update(Keyboard & kbd, float dt)
 
 	UpdateControls(kbd);
 
-	starvingTime -= dt;
 	time += dt;
 	if (time < timeOut)
 	{
@@ -65,6 +64,7 @@ void Snake::Update(Keyboard & kbd, float dt)
 	}
 	time -= timeOut;
 
+	starvingTime -= dt;
 	if (starvingTime <= 0)
 	{
 		health--;
